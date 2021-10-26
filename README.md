@@ -7,6 +7,6 @@ The app uses crypto current information from Coingecko API. User adds informatio
 
 A user can be created, can login, logout and has coockie/session. Deleating a user is now implemented yet. Each individual user transaction is shown when logged in. A user cannot see other users transactions!
 
-UI is crude, but visualisation was made for better seeing the information on transactions.
+UI is crude, but visualisation was made to display the information on transactions.
 
 Further changes will be registered in this readme

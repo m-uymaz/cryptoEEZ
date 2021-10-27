@@ -9,4 +9,11 @@ A user can be created, can login, logout and has coockie/session. Deleation of a
 
 UI is crude, but visualisation was made to display the information on transactions.
 
+urls:
+/register
+/login
+/logout
+and
+/    to create and manage crypto trades
+
 Further changes will be registered in this readme

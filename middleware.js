@@ -7,3 +7,13 @@ module.exports.isLoggedIn = (req, res, next) => {
     }
     next()
 }
+
+module.exports.isCryptoCreator = async (req, res, next) => {
+    const { id } = req.params;
+    const cryptoTrans = await Crypto.findById(id);
+    if (!cryptoTrans.user.equals(req.user._id)) {
+        console.log('ERROR');
+        return res.redirect('/');
+    }
+    next();
+}

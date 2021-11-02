@@ -36,6 +36,7 @@
             <option value="bch">BCH</option>
             <option value="dot">DOT</option>
             <option value="doge">DOGE</option>
+            <option value="enj">ENJ</option>
             <option value="eos">EOS</option>
             <option value="eth">ETH</option>
             <option value="link">LINK</option>
@@ -90,6 +91,9 @@
         <td class="loss"><%=`${totalBalance.toFixed(2)} eur`%></td>
         <% } %>
         <td><%=`${c.createdAt.getDate()}.${c.createdAt.getMonth() + 1}.${c.createdAt.getFullYear()}`%></td>
+        <td class="border-hide">
+          <form action="/<%= c._id %>?_method=DELETE" method="POST"><button>Delete</button></form>
+        </td>
       </tr>
       <% } %>
       <% } %>

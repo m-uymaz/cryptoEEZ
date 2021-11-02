@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV !== "production") {
+    require('dotenv').config();
+}
+
 const express = require('express');
 const app = express();
 const axios = require('axios');
@@ -15,9 +19,10 @@ const methodOverride = require('method-override');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 
-const { isLoggedIn } = require('./middleware');
+const { isLoggedIn, isCryptoCreator } = require('./middleware');
 
-mongoose.connect('mongodb://localhost:27017/crypteasy', {
+const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/crypteasy';
+mongoose.connect(dbUrl, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
     useCreateIndex: true,
@@ -27,7 +32,6 @@ mongoose.connect('mongodb://localhost:27017/crypteasy', {
 }).catch((err) => {
     console.log('DB Connection Error:', err.message)
 });
-
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -42,7 +46,7 @@ app.use(helmet({ contentSecurityPolicy: false }));
 app.use(mongoSanitize());
 
 const MongoStore = require('connect-mongo');
-const secret = process.env.SESSION_SECRET || 'mongodb://localhost:27017/crypteasy'
+const secret = process.env.SESSION_SECRET;
 app.use(session({
     name: 'fb_',
     secret: secret,
@@ -53,7 +57,7 @@ app.use(session({
         expires: Date.now() + 1000 * 60 * 60 * 24 * 5
     },
     store: MongoStore.create({
-        mongoUrl: 'mongodb://localhost:27017/crypteasy',
+        mongoUrl: dbUrl,
         secret: secret,
         touchAfter: 24 * 3600
     })
@@ -61,7 +65,7 @@ app.use(session({
 
 //---- SEED ---- FOR DEV ---- DELETE LATER! 
 let selectedCoins = ['btc', 'eth', 'luna', 'eos', 'sol', 'trx', 'shib', 'bch', 'uni', 'ltc', 'doge',
-    'xrp', 'ada', 'bnb', 'dot', 'link', 'vet'];
+    'xrp', 'ada', 'bnb', 'dot', 'link', 'vet', 'enj'];
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -101,12 +105,18 @@ app.get('/', isLoggedIn, async (req, res) => {
     res.render('home', { displayCoins, cryptos });
 });
 
-app.post('/',async (req, res) => {
+app.post('/', async (req, res) => {
     const newOrder = new Crypto(req.body.order);
     newOrder.user = req.user._id;
     await newOrder.save();
     res.redirect('/');
-})
+});
+
+app.delete('/:id', isLoggedIn, isCryptoCreator, async (req, res) => {
+    const { id } = req.params;
+    await Crypto.findByIdAndDelete(id);
+    res.redirect('/');
+});
 
 app.get('/register', (req, res) => {
     res.render('./users/register');

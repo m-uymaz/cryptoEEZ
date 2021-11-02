@@ -44,3 +44,10 @@ td {
 .border-hide {
     border: hidden;
 }
+
+.win {
+    color: rgb(0, 180, 0);
+}
+.loss {
+    color: red;
+}

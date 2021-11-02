@@ -54,7 +54,7 @@ app.use(session({
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
-        expires: Date.now() + 1000 * 60 * 60 * 24 * 5
+        maxAge: Date.now() + 3600000 * 24 * 7
     },
     store: MongoStore.create({
         mongoUrl: dbUrl,

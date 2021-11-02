@@ -129,7 +129,7 @@ app.post('/register', async (req, res) => {
         const registeredUser = await User.register(user, password);
         req.login(registeredUser, err => {
             if (err) return next(err);
-            res.redirect('/');
+            res.redirect('/'); 
         })
     } catch (e) {
         res.redirect('/register');

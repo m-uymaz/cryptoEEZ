@@ -28,7 +28,7 @@
     <div class="row">
       <div class="col-md-4 col-xl-6">
         <form action="/" method="POST">
-          <label for="symbol">Symbol</label>
+          <label for="symbol">Name</label>
           <select name="order[symbol]" type="text">
             <option value="ada">ADA</option>
             <option value="bnb">BNB</option>
@@ -49,7 +49,7 @@
             <option value="vet">VET</option>
             <option value="xrp">XRP</option>
           </select>
-          <label for="boughtAt">boughtAt</label>
+          <label for="boughtAt">Bought at</label>
           <input name="order[boughtAt]" style="width: 70px" type="float">
           <label for="ammount">Amount</label>
           <input name="order[amount]" style="width: 70px" type="float">
@@ -73,7 +73,7 @@
       <% for (c of cryptos) {%>
       <% for (coin of displayCoins) {%>
       <% if (c.symbol === coin.symbol) {%>
-      <% let wonLost = (((c.amount / c.boughtAt) - (c.amount / coin.current_price)) * coin.current_price) %>
+      <% let wonLost = (((c.amount / c.boughtAt) - (c.amount / coin.current_price)) * coin.current_price) - (c.amount * 0.018) %>
       <% let totalBalance = (wonLost + c.amount) %>
       <tr>
         <td id="coinImgTd">

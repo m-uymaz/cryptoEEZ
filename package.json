@@ -24,7 +24,7 @@
   },
   "scripts": {
     "hmr": "nodemon index.js",
-    "nodemon": "npm run hmr",
+    "dev": "npm run hmr",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js"
   },

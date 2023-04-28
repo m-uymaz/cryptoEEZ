@@ -4,9 +4,10 @@ if (process.env.NODE_ENV !== "production") {
 
 const express = require('express');
 const app = express();
+const ejsmate = require('ejs-mate');
+
 const mongoose = require('mongoose');
 const Crypto = require('./models/crypto');
-const ejsmate = require('ejs-mate');
 
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
@@ -62,9 +63,6 @@ app.use(session({
     })
 }));
 
-//SEED "DOGEEUR"
-let selectedCoins = '"ADAEUR","BCHEUR","BTCEUR","BTTEUR","BNBEUR","ETHEUR","LUNAEUR","EOSEUR","SOLEUR","TRXEUR","SHIBEUR","UNIEUR","LTCEUR","DOGEEUR",' +
-  '"DOTEUR","LINKEUR","VETEUR","ENJEUR","SXPEUR","WINEUR","XRPEUR","XLMEUR"';
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -82,12 +80,16 @@ app.use((req, res, next) => {
 
 app.get('/', isLoggedIn, async (req, res) => {
   const cryptos = await Crypto.find({ user: req.user._id });
+  const selectedCoins = await User.findOne({ username: req.user.username })
+    .then(data => data.selectedCoins);
+
+  const forApi = '"' + selectedCoins.join('","') + '"';
+  console.log("coatation", forApi)
   cryptos.reverse();
   try {
-    const response = await fetch(`https://api.binance.com/api/v3/ticker/price?symbols=[${selectedCoins}]`)
+    const response = await fetch(`https://api.binance.com/api/v3/ticker/price?symbols=[${forApi}]`)
       .then(res => res.json());
-    
-    console.log(response)
+
     res.render('home', { response, cryptos });
   } catch (err) {
     console.log(err);

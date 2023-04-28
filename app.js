@@ -4,7 +4,6 @@ if (process.env.NODE_ENV !== "production") {
 
 const express = require('express');
 const app = express();
-const axios = require('axios');
 const mongoose = require('mongoose');
 const Crypto = require('./models/crypto');
 const ejsmate = require('ejs-mate');
@@ -21,7 +20,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 
 const { isLoggedIn, isCryptoCreator } = require('./middleware');
 
-const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/crypteasy';
+const dbUrl = process.env.DB_URL;
 mongoose.connect(dbUrl, {
     useUnifiedTopology: true,
     useNewUrlParser: true,
@@ -63,18 +62,16 @@ app.use(session({
     })
 }));
 
-//---- SEED ---- FOR DEV ---- DELETE LATER! 
-let selectedCoins = ['btc', 'eth', 'luna', 'eos', 'sol', 'trx', 'shib', 'bch', 'uni', 'ltc', 'doge',
-    'xrp', 'ada', 'bnb', 'dot', 'link', 'vet', 'enj'];
-
+//SEED "DOGEEUR"
+let selectedCoins = '"ADAEUR","BCHEUR","BTCEUR","BTTEUR","BNBEUR","ETHEUR","LUNAEUR","EOSEUR","SOLEUR","TRXEUR","SHIBEUR","UNIEUR","LTCEUR","DOGEEUR",' +
+  '"DOTEUR","LINKEUR","VETEUR","ENJEUR","SXPEUR","WINEUR","XRPEUR","XLMEUR"';
 app.use(passport.initialize());
 app.use(passport.session());
 
 const User = require('./models/user');
-// use static authenticate method of model in LocalStrategy
+
 passport.use(new LocalStrategy(User.authenticate()));
 
-// use static serialize and deserialize of model for passport session support
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
@@ -84,25 +81,17 @@ app.use((req, res, next) => {
 })
 
 app.get('/', isLoggedIn, async (req, res) => {
-    const cryptos = await Crypto.find({ user: req.user._id });
-    cryptos.reverse();
-    let coins = [{}];
-    await axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=eur&order=market_cap_desc&per_page=250&page=1&sparkline=false')
-    .then(res => {
-        coins = res.data;
-    })
-    .catch(err => {
-        console.log("Error: ", err);
-    });
-    let displayCoins = [];
-    for (coin of coins) {
-        for (selected of selectedCoins) {
-        if (selected === coin.symbol) {
-            displayCoins.push(coin);
-            }
-        }
-    }
-    res.render('home', { displayCoins, cryptos });
+  const cryptos = await Crypto.find({ user: req.user._id });
+  cryptos.reverse();
+  try {
+    const response = await fetch(`https://api.binance.com/api/v3/ticker/price?symbols=[${selectedCoins}]`)
+      .then(res => res.json());
+    
+    console.log(response)
+    res.render('home', { response, cryptos });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 app.post('/', async (req, res) => {

@@ -4,7 +4,6 @@
   "description": "Count Crypto In Real Time",
   "main": "app.js",
   "dependencies": {
-    "axios": "^0.21.4",
     "body-parser": "^1.19.0",
     "connect-mongo": "^4.6.0",
     "dotenv": "^10.0.0",
@@ -18,12 +17,14 @@
     "method-override": "^3.0.0",
     "mongoose": "^5.13.10",
     "morgan": "^1.10.0",
+    "nodemon": "^2.0.22",
     "passport": "^0.5.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^6.1.0"
   },
-  "devDependencies": {},
   "scripts": {
+    "hmr": "nodemon index.js",
+    "nodemon": "npm run hmr",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js"
   },

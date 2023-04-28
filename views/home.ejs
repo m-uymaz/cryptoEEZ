@@ -52,7 +52,6 @@
   <div>
     <table id="table">
       <tr id="info">
-        <td class="border-hide border-hide-left"></td>
         <td class="border-hide">Coin</td>
         <td class="border-hide">Curr Price</td>
         <td class="border-hide">Bought at</td>
@@ -62,16 +61,13 @@
         <td class="border-hide">Created</td>
       </tr>
       <% for (c of cryptos) {%>
-      <% for (coin of displayCoins) {%>
+      <% for (coin of response) {%>
       <% if (c.symbol === coin.symbol) {%>
-      <% let wonLost = (((c.amount / c.boughtAt) - (c.amount / coin.current_price)) * coin.current_price) - (c.amount * 0.018) %>
+      <% let wonLost = (((c.amount / c.boughtAt) - (c.amount / coin.price)) * coin.price) - (c.amount * 0.018) %>
       <% let totalBalance = (wonLost + c.amount) %>
       <tr>
-        <td id="coinImgTd">
-          <div><img id="coinImg" src="<%= coin.image %>" alt="" srcset=""></div>
-        </td>
         <td><%= coin.symbol.toUpperCase() %></td>
-        <td><%= coin.current_price %></td>
+        <td><%= coin.price %></td>
         <td><%= c.boughtAt %></td>
         <td><%= c.amount %></td>
         <% if (wonLost > 0 ) { %>

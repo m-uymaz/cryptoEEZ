@@ -90,7 +90,7 @@ app.get('/', isLoggedIn, async (req, res) => {
     const response = await fetch(`https://api.binance.com/api/v3/ticker/price?symbols=[${forApi}]`)
       .then(res => res.json());
 
-    res.render('home', { response, cryptos });
+    res.render('./layouts/boilerplate', { response, cryptos });
   } catch (err) {
     console.log(err);
   }

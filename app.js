@@ -5,6 +5,7 @@ require('dotenv').config();
 
 const express = require('express');
 const app = express();
+const fetch = requre('node-fetch');
 const ejsmate = require('ejs-mate');
 
 const mongoose = require('mongoose');

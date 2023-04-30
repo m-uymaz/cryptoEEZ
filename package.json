@@ -1,5 +1,6 @@
 {
   "name": "crypteasy",
+  "type": "module",
   "version": "1.0.0",
   "description": "Count Crypto In Real Time",
   "main": "app.js",

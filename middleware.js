@@ -1,6 +1,6 @@
-const Crypto = require('./models/crypto');
+import Crypto from './models/crypto.js';
 
-module.exports.isLoggedIn = (req, res, next) => {
+const isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
         req.session.returnTo = req.originalUrl;
         return res.redirect('/login');
@@ -8,7 +8,7 @@ module.exports.isLoggedIn = (req, res, next) => {
     next()
 }
 
-module.exports.isCryptoCreator = async (req, res, next) => {
+const isCryptoCreator = async (req, res, next) => {
     const { id } = req.params;
     const cryptoTrans = await Crypto.findById(id);
     if (!cryptoTrans.user.equals(req.user._id)) {
@@ -17,3 +17,5 @@ module.exports.isCryptoCreator = async (req, res, next) => {
     }
     next();
 }
+
+export { isLoggedIn, isCryptoCreator };
